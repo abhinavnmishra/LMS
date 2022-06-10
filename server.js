@@ -122,7 +122,12 @@ const limiter = RateLimit.rateLimit({
 });
 app.use(limiter);
 app.use(hpp());
-app.use(cors());
+const corsOptions = {
+  origin: '*',
+  methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}
+app.use(cors(corsOptions));
 
 app.use(cookieParser());
 
