@@ -17,13 +17,15 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const RateLimit = require('express-rate-limit');
 const hpp = require('hpp');
-const cors = require('cors');
+var cors = require('cors');
 
 //Loading config.env file
 dotenv.config({ path: './config/config.env' });
 
 //Connect to Database
 connectDB();
+
+app.use(cors());
 
 //app object of express class
 const app = express();
@@ -122,9 +124,6 @@ const limiter = RateLimit.rateLimit({
 });
 app.use(limiter);
 app.use(hpp());
-
-app.use(cors());
-
 app.use(cookieParser());
 
 app.use(errorHandler);
