@@ -54,6 +54,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   //   const token = user.getSignedJwtToken();
 
   //   res.status(200).json({ success: true, token });
+
   res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
   sendTokenResponse(user, 200, res);
 });
