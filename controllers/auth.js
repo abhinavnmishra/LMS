@@ -55,7 +55,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   //   res.status(200).json({ success: true, token });
 
-  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.append('Access-Control-Allow-Headers', 'Content-Type');
   sendTokenResponse(user, 200, res);
 });
