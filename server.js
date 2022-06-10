@@ -25,10 +25,10 @@ dotenv.config({ path: './config/config.env' });
 //Connect to Database
 connectDB();
 
-app.use(cors());
 
 //app object of express class
 const app = express();
+app.use(cors());
 
 //Body Parser for models
 app.use(express.json());
