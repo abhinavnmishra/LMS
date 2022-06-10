@@ -55,10 +55,8 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   //   res.status(200).json({ success: true, token });
 
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'POST');
-  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization");
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Headers', 'Content-Type');
   sendTokenResponse(user, 200, res);
 });
 
