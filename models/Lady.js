@@ -29,6 +29,9 @@ const LadySchema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
+  token: {
+    type: String
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -64,9 +67,9 @@ LadySchema.methods.getResetPasswordToken = function () {
 
   // Hash token and set to resetPasswordToken field
   this.resetPasswordToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
 
   // Set expire
   this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;

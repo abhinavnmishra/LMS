@@ -4,7 +4,6 @@ const {
 } = require('../controllers/twilio');
 const router = express.Router();
 
-router.get('/login', sendLoginUrl);
 router.get('/resource', sendResourceUrl);
 router.get('/redirect', redirect);
 

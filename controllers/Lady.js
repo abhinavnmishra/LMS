@@ -1,8 +1,10 @@
 const crypto = require('crypto');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
+const frontend = process.env.FRONTEND_HOST;
 // const sendEmail = require('../utils/sendEmail');
 const Lady = require('../models/Lady');
+const sendUrl = require('../controllers/twilio').sendUrl;
 
 // @desc      Register user
 // @route     POST /api/v1/Lady/register
@@ -10,16 +12,23 @@ const Lady = require('../models/Lady');
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, adhaar, phone, password } = req.body;
 
+  var mykey = crypto.createCipher('aes-128-cbc', 'mypassword');
+  var mystr = mykey.update(phone+password, 'utf8', 'hex')
+  mystr += mykey.final('hex');
+  console.log(mystr);
+
   // Create user
   const user = await Lady.create({
     name,
     adhaar,
     phone,
     password,
+    mystr
   });
 
+  sendUrl(frontend+'?token='+mystr, phone);
+
   user.save({ validateBeforeSave: false });
-  //   sendTokenResponse(user, 200, res);
   res.status(200).json({ success: true, data: user });
 });
 
@@ -32,7 +41,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   // Validate emil & password
   if (!phone || !password) {
     return next(
-      new ErrorResponse('Please provide a phone number and password', 400)
+        new ErrorResponse('Please provide a phone number and password', 400)
     );
   }
 

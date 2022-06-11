@@ -1,6 +1,6 @@
 const accountSid = process.env.TWILIO_SID;
 const authToken = process.env.TWILIO_AUTH;
-const number = process.env.NUMBER;
+const number = process.env.TWILIO_NUMBER;
 const host = process.env.HOST;
 const rapidAuth = process.env.SMS_AUTH;
 const fetch = require('node-fetch-commonjs');
@@ -21,18 +21,16 @@ exports.sendResourceUrl = asyncHandler(async (req, res, next) => {
     res.status(200).send('<iframe width="560" height="315" src="https://www.youtube.com/embed/JWN6qNGJQbI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
 });
 
-exports.sendLoginUrl = asyncHandler(async (req, res, next) => {
+exports.sendUrl = function (token, contact){
     client.messages
         .create({
-            body: 'This is your unique Login URL : xyz',
-            from: 'whatsapp:+14155238886',
-            to: 'whatsapp:+917044025570'
+            body: 'This is your unique Login URL : '+token,
+            from: 'whatsapp:'+number,
+            to: 'whatsapp:+91'+contact
         })
         .then(message => console.log(message.sid))
         .done();
-
-    res.status(200).send('Success!');
-});
+}
 
 
 exports.otp = asyncHandler(async (req, res, next) => {
