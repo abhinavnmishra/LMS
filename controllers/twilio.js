@@ -1,115 +1,95 @@
-import React from "react";
-// import { Button } from '@material-ui/core';
-// import Button from '@mui/material/Button';
-import { Typography } from "@mui/material";
-// import { Container } from "@mui/system";
-import './loginpage.css';
-// import { useTranslation } from 'react-i18next';
-import { useState } from "react";
+const accountSid = process.env.TWILIO_SID;
+const authToken = process.env.TWILIO_AUTH;
+const number = process.env.TWILIO_NUMBER;
+const host = process.env.HOST;
+const rapidAuth = process.env.SMS_AUTH;
+const fetch = require('node-fetch-commonjs');
 
-const LoginPage=()=>{
-    const [name,setName] = useState("");
-    const [phoneno,setPhoneNo] = useState("");
-    const [password,setPassword] = useState("");
-    const [otp,setOtp] = useState("");
-    const [aadharno,setAadharNo] = useState("");
+const client = require('twilio')(accountSid, authToken);
+const asyncHandler = require('../middleware/async');
 
-    const getOtp = (e)=>{
-        //send otp to phone no
-        e.preventDefault();
-        console.log("here");
-        let headers = new Headers();
-        headers.append("Content-Type", "application/json");
-        headers.append('Accept', 'application/json');
+exports.sendResourceUrl = asyncHandler(async (req, res, next) => {
+    client.messages
+        .create({
+            body: 'Kindly go through the resource link provided below. '+host+'whatsapp/redirect?id=123',
+            from: 'whatsapp:+14155238886',
+            to: 'whatsapp:+917044025570'
+        })
+        .then(message => console.log(message.sid))
+        .done();
 
+    res.status(200).send('<iframe width="560" height="315" src="https://www.youtube.com/embed/JWN6qNGJQbI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+});
 
-        let raw = JSON.stringify({"phone":phoneno});
-
-        let requestOptions = {
-            method: 'POST',
-            body: raw,
-            headers: headers,
-            redirect: 'follow'
-        };
-
-        console.log(raw);
-        fetch("https://cfg22-backend.herokuapp.com/whatsapp/otp", requestOptions)
-            .then(response => response.text())
-            .then(result => {
-                alert('Success');
-            })
-            .catch(error => {
-                alert(error);
-                console.log('error', error);
-
-            });
-    }
-    const onSubmit = (e)=>{
-        //send data to data base and compare the otp sent and entered otp
-        e.preventDeafult()
-        const user = {
-            name : name,
-            phoneno : phoneno,
-            password : password,
-            aadharno : aadharno,
-            otp:otp
-        }
-    }
-
-    return(
-        <div >
-            <h4>Welcome</h4>
-            <form  className="form">
-                <h2 className="form-heading">Login</h2>
-                <div className="form-item">
-                    <label>Name</label>
-                    <br></br>
-                    <input
-                        type="text"
-                        placeholder="Name"
-                        onChange={(e)=>{setName(e.target.value)}}
-                    />
-                </div>
-
-                <div className="form-item">
-                    <label>Phone no</label>
-                    <br></br>
-                    <input
-                        type="string "
-                        placeholder="Enter phone no"
-                        onChange={(e)=>{setPhoneNo(e.target.value)}}
-                    />
-                </div>
-                <div className="form-item">
-                    <label>Aadhar no</label>
-                    <br></br>
-                    <input
-                        type="string"
-                        placeholder="enter aadhar no"
-                        onChange={(e)=>{setAadharNo(e.target.value)}}
-                    />
-                </div>
-                <div className="form-item">
-                    <label>Password</label>
-                    <br></br>
-                    <input
-                        type="password"
-                        placeholder="create a password"
-                        onChange={(e)=>{setPassword(e.target.value)}}
-                    />
-                </div>
-                <div className="form-item">
-                    <button onClick={getOtp}>Get otp</button>
-                    <input
-                        type="String"
-                        placeholder="Enter otp"
-                        onChange={(e)=>{setOtp(e.target.value)}}
-                    />
-                </div>
-                <button onClick={onSubmit}>submit</button>
-            </form>
-
-        </div>
-    );
+exports.sendUrl = function (token, contact){
+    client.messages
+        .create({
+            body: 'This is your unique Login URL : '+token,
+            from: 'whatsapp:'+number,
+            to: 'whatsapp:+91'+contact
+        })
+        .then(message => console.log(message.sid))
+        .done();
 }
-export default LoginPage;
+
+
+exports.otp = asyncHandler(async (req, res, next) => {
+
+    const encodedParams = new URLSearchParams();
+    encodedParams.append("to", "+91"+req.body.number);
+    encodedParams.append("p", rapidAuth);
+    encodedParams.append("text", "Your otp is 3456");
+
+    const url = 'https://sms77io.p.rapidapi.com/sms';
+
+    const options = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            'X-RapidAPI-Key': '4f4cce1780msh079ce874cfd1627p1b64dcjsn80984404a809',
+            'X-RapidAPI-Host': 'sms77io.p.rapidapi.com'
+        },
+        body: encodedParams
+    };
+
+    fetch(url, options)
+        .then(res => res.json())
+        .then(json => {
+            console.log(json);
+            res.status(200).json({
+                success: true,
+                data: json,
+            });
+        })
+        .catch(err => {
+            console.error('error:' + err);
+            res.status(500).json({
+                success: false,
+                data: 'null',
+            });
+        });
+
+});
+
+exports.validateOtp = asyncHandler(async (req, res, next) => {
+
+    if(req.body.otp === '3456')
+        res.status(200).send('Success');
+    else
+        res.status(403).send('Failed');
+});
+
+exports.redirect = asyncHandler(async (req, res, next) =>{
+    if(req.query.id === '123'){
+        return res.redirect('https://youtu.be/JWN6qNGJQbI');
+    }
+    else if(req.query.id === '234'){
+        return res.redirect('https://youtu.be/JWN6qNGJQbI');
+    }
+    else{
+        return res.redirect('https://youtu.be/JWN6qNGJQbI');
+    }
+});
+
+
+
