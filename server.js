@@ -32,6 +32,8 @@ app.use(cors());
 
 //Body Parser for models
 app.use(express.json());
+const twilio = require('./routes/twilio');
+app.use('/whatsapp', twilio);
 
 //process.env is used to read variables of env file imported in .js file
 const PORT = process.env.PORT || 5000; //if .env file does not have PORT variable, consider it 5000
