@@ -2,6 +2,7 @@ const accountSid = process.env.TWILIO_SID;
 const authToken = process.env.TWILIO_AUTH;
 const number = process.env.NUMBER;
 const host = process.env.HOST;
+const rapidAuth = process.env.SMS_AUTH;
 const fetch = require('node-fetch-commonjs');
 
 const client = require('twilio')(accountSid, authToken);
@@ -38,7 +39,7 @@ exports.otp = asyncHandler(async (req, res, next) => {
 
     const encodedParams = new URLSearchParams();
     encodedParams.append("to", "+917044025570");
-    encodedParams.append("p", "zJJDjqvan7BApoHq3kbnkK9y5lstodkfArgcrvuROaaY1kPjdJYhbNVJCaAMvbid");
+    encodedParams.append("p", rapidAuth);
     encodedParams.append("text", "Your otp is 3456");
 
     const url = 'https://sms77io.p.rapidapi.com/sms';
