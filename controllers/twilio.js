@@ -9,7 +9,7 @@ const asyncHandler = require('../middleware/async');
 exports.sendResourceUrl = asyncHandler(async (req, res, next) => {
     client.messages
         .create({
-            body: 'Kindly go through the resource link provided below. '+host+'/whatsapp/redirect?id=123',
+            body: 'Kindly go through the resource link provided below. '+host+'whatsapp/redirect?id=123',
             from: 'whatsapp:+14155238886',
             to: 'whatsapp:+917044025570'
         })
