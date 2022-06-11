@@ -7,6 +7,6 @@ const router = express.Router();
 router.get('/login', sendLoginUrl);
 router.get('/resource', sendResourceUrl);
 router.get('/redirect', redirect);
-router.post('/otp', otp);
+router.get('/otp', otp);
 
 module.exports = router;
