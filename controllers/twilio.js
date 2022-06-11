@@ -38,7 +38,7 @@ exports.sendLoginUrl = asyncHandler(async (req, res, next) => {
 exports.otp = asyncHandler(async (req, res, next) => {
 
     const encodedParams = new URLSearchParams();
-    encodedParams.append("to", "+917044025570");
+    encodedParams.append("to", "+91"+req.body.number);
     encodedParams.append("p", rapidAuth);
     encodedParams.append("text", "Your otp is 3456");
 
@@ -60,6 +60,14 @@ exports.otp = asyncHandler(async (req, res, next) => {
         .catch(err => console.error('error:' + err));
 
     res.status(200).send('Success!');
+});
+
+exports.validateOtp = asyncHandler(async (req, res, next) => {
+
+    if(req.body.otp === '3456')
+        res.status(200).send('Success');
+    else
+        res.status(403).send('Failed');
 });
 
 exports.redirect = asyncHandler(async (req, res, next) =>{
