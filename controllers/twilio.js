@@ -11,7 +11,7 @@ const asyncHandler = require('../middleware/async');
 exports.sendResourceUrl = asyncHandler(async (req, res, next) => {
     client.messages
         .create({
-            body: 'Kindly go through the resource material for the training program you are enrolled into. Please do not share this link with anyone.  '+host+'whatsapp/redirect?id=123',
+            body: 'Kindly go through the resource material for the training program you are enrolled into. Please do not share this link with anyone.  https://cfg22-backend.herokuapp.com/whatsapp/redirect?id=123',
             from: 'whatsapp:+14155238886',
             to: 'whatsapp:+919501750557'
         })
@@ -24,7 +24,7 @@ exports.sendResourceUrl = asyncHandler(async (req, res, next) => {
 exports.sendUrl = function (token, contact){
     client.messages
         .create({
-            body: 'This is your unique Login URL : '+token,
+            body: 'This is your unique Login URL : '+token+ ' Kindly do not share this link with others.',
             from: 'whatsapp:'+number,
             to: 'whatsapp:+91'+contact
         })
