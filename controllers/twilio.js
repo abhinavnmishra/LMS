@@ -13,7 +13,7 @@ exports.sendResourceUrl = asyncHandler(async (req, res, next) => {
         .create({
             body: 'Kindly go through the resource link provided below. '+host+'whatsapp/redirect?id=123',
             from: 'whatsapp:+14155238886',
-            to: 'whatsapp:+917044025570'
+            to: 'whatsapp:+919501750557'
         })
         .then(message => console.log(message.sid))
         .done();

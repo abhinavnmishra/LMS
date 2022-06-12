@@ -30,6 +30,8 @@ const LadySchema = new mongoose.Schema({
     select: false,
   },
   token: {
+    required: [true, 'Token not set'],
+    minlength: 6,
     type: String
   },
   createdAt: {
