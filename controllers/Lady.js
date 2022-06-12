@@ -17,9 +17,9 @@ exports.register = asyncHandler(async (req, res, next) => {
     return;
   }
   var mykey = crypto.createCipher('aes-128-cbc', 'mypassword');
-  var mystr = mykey.update(phone+password, 'utf8', 'hex')
-  mystr += mykey.final('hex');
-  console.log(mystr);
+  var token = mykey.update(phone+password, 'utf8', 'hex')
+  token += mykey.final('hex');
+  console.log(token);
 
   // Create user
   const user = await Lady.create({
@@ -27,10 +27,10 @@ exports.register = asyncHandler(async (req, res, next) => {
     adhaar,
     phone,
     password,
-    mystr
+    token
   });
 
-  sendUrl(frontend+'?token='+mystr, phone);
+  sendUrl(frontend+'?token='+token, phone);
 
   user.save({ validateBeforeSave: false });
   res.status(200).json({ success: true, data: user });
