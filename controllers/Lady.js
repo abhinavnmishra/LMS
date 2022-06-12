@@ -10,8 +10,12 @@ const sendUrl = require('../controllers/twilio').sendUrl;
 // @route     POST /api/v1/Lady/register
 // @access    Public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, adhaar, phone, password } = req.body;
+  const { name, adhaar, phone, password, otp } = req.body;
 
+  if(otp!=="3456"){
+    res.status(403).json({ success: false, data: null });
+    return;
+  }
   var mykey = crypto.createCipher('aes-128-cbc', 'mypassword');
   var mystr = mykey.update(phone+password, 'utf8', 'hex')
   mystr += mykey.final('hex');
